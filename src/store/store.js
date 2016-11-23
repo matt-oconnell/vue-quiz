@@ -12,7 +12,7 @@ const state = {
   status: {
     answered: 0,
     correctAnswers: 0,
-  },
+  }
 };
 
 const mutations = {
@@ -45,7 +45,7 @@ const mutations = {
     state.answerStatus = 'incorrect';
     state.question.answered = true;
     state.status.answered++;
-  },
+  }
 };
 
 const actions = {
@@ -67,7 +67,7 @@ const actions = {
     } else {
       commit('INCORRECT_ANSWER');
     }
-  },
+  }
 };
 
 const getters = {
@@ -78,7 +78,7 @@ const getters = {
     const fraction = correct / answered || 0;
     const percentage = Math.round(fraction * 100);
     return `${percentage}%`;
-  },
+  }
 };
 
 export default new Vuex.Store({

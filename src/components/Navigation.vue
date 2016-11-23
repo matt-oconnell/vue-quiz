@@ -1,7 +1,7 @@
 <template>
   <div>
     <div>
-      <a class="question" v-for="(question, i) in $store.state.questions" @click="gotoQuestion(i)">
+      <a class="question" v-for="(_, i) in questions" @click="gotoQuestion(i)">
         goto: {{i}}
       </a>
     </div>
@@ -15,6 +15,11 @@
 import { mapActions } from 'vuex';
 
 export default {
+  computed: {
+    questions() {
+      return this.$store.state.questions;
+    }
+  },
   methods: mapActions([
     'gotoQuestion',
     'nextQuestion',

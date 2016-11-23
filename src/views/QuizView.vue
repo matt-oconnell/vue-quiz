@@ -1,11 +1,11 @@
 <template>
-  <div id="app">
+  <div>
     <quiz></quiz>
   </div>
 </template>
 
 <script>
-import Quiz from './components/Quiz';
+import Quiz from './../components/Quiz';
 
 export default {
   components: {

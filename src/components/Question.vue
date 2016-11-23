@@ -1,30 +1,35 @@
 <template>
   <div>
     <h1>Question!</h1>
-    <p>{{$store.state.question.question}}</p>
-    <div class="answers">
-      <button type="button"
-        v-for="(answer, i) in $store.state.question.answers"
-        :disabled="$store.state.question.answered"
-        @click="submitAnswer(i)"
-      >
-        {{answer}}
-      </button>
+    <p>{{question}}</p>
+    <div>
+      <div v-for="(answer, i) in answers">
+        <button type="button" :disabled="answered" @click="submitAnswer(i)">
+          {{answer}}
+        </button>
+      </div>
     </div>
-    <p>
-      <em v-if="$store.state.question.answered">
-        {{$store.state.question.explanation}}
-      </em>
+    <p v-if="answered">
+      {{explanation}}
     </p>
-    <p><strong v-if="$store.state.answerStatus === 'correct'">Correct!</strong></p>
-    <p><strong v-if="$store.state.answerStatus === 'incorrect'">Wrong!</strong></p>
+    <p><strong v-if="answerStatus === 'correct'">Correct!</strong></p>
+    <p><strong v-if="answerStatus === 'incorrect'">Wrong!</strong></p>
   </div>
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapState } from 'vuex';
 
 export default {
+  computed: {
+    ...mapState({
+      answers: s => s.question.answers,
+      answered: s => s.question.answered,
+      answerStatus: s => s.answerStatus,
+      explanation: s => s.question.explanation,
+      question: s => s.question.question
+    })
+  },
   methods: mapActions([
     'submitAnswer',
   ]),
