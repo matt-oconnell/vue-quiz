@@ -63,6 +63,10 @@ module.exports = {
         loader: 'json'
       },
       {
+        test: /\.md$/,
+        loader: 'raw-loader'
+      },
+      {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
         loader: 'url',
         query: {
