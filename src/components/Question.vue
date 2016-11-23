@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1>Question!</h1>
-    <p>{{question}}</p>
+    <p v-html="question"></p>
     <div>
       <div v-for="(answer, i) in answers">
         <button type="button" :disabled="answered" @click="submitAnswer(i)">
@@ -19,6 +19,7 @@
 
 <script>
 import { mapActions, mapState } from 'vuex';
+import markdown from '../modules/markdown';
 
 export default {
   computed: {
@@ -27,7 +28,7 @@ export default {
       answered: s => s.question.answered,
       answerStatus: s => s.answerStatus,
       explanation: s => s.question.explanation,
-      question: s => s.question.question
+      question: s => markdown.render(s.question.question)
     })
   },
   methods: mapActions([

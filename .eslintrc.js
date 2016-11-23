@@ -28,7 +28,8 @@ module.exports = {
     'no-param-reassign': 0,
     'no-shadow': 0,
     'comma-dangle': 0,
-    // allow debugger during development
+    'func-names': 0,
+    'no-console': process.env.NODE_ENV === 'production' ? 2 : 0,
     'no-debugger': process.env.NODE_ENV === 'production' ? 2 : 0
   }
 }
