@@ -1,42 +1,23 @@
 <template>
   <div>
-    <div class="status">
-      <div>
-        <a class="question" v-for="(question, i) in $store.state.questions" @click="gotoQuestion(i)">
-          goto: {{i}}
-        </a>
-      </div>
-      <div>
-        <p>Questions Answered: {{answered}}</p>
-        <p>Percentage Correct: {{percentageCorrect}}</p>
-      </div>
-    </div>
-    <hr />
-    <h1>{{$store.state.questionI}}</h1>
-    <button @click="lastQuestion">Last Question</button>
-    <button @click="nextQuestion">Next Question</button>
-    <div>
-      <question></question>
-    </div>
+    <status></status>
+    <hr>
+    <navigation></navigation>
+    <hr>
+    <question></question>
   </div>
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex';
+import Navigation from './Navigation';
 import Question from './Question';
+import Status from './Status';
 
 export default {
-  computed: mapGetters([
-    'answered',
-    'percentageCorrect',
-  ]),
-  methods: mapActions([
-    'nextQuestion',
-    'lastQuestion',
-    'gotoQuestion',
-  ]),
   components: {
+    Navigation,
     Question,
+    Status,
   },
 };
 </script>

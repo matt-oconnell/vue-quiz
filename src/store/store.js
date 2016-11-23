@@ -75,7 +75,8 @@ const getters = {
   percentageCorrect: (state) => {
     const correct = state.status.correctAnswers;
     const answered = state.status.answered;
-    const percentage = Math.round((correct / answered) * 100) || 100;
+    const fraction = correct / answered || 0;
+    const percentage = Math.round(fraction * 100);
     return `${percentage}%`;
   },
 };
