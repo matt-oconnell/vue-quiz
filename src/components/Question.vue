@@ -20,7 +20,6 @@
 <script>
 import { mapActions, mapState } from 'vuex';
 import markdown from '../modules/markdown';
-import ques1 from '../data/1q.md';
 
 export default {
   computed: {
@@ -28,9 +27,11 @@ export default {
       answers: s => s.question.answers,
       answered: s => s.question.answered,
       answerStatus: s => s.answerStatus,
-      explanation: s => s.question.explanation
-    }),
-    question: () => markdown.render(ques1)
+      explanation: s => s.question.explanation,
+      question: (s) => {
+        return markdown.render(s.questionText) || '';
+      }
+    })
   },
   methods: mapActions([
     'submitAnswer',

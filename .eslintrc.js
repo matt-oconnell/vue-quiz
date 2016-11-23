@@ -29,6 +29,7 @@ module.exports = {
     'no-shadow': 0,
     'comma-dangle': 0,
     'func-names': 0,
+    'arrow-body-style': 0,
     'no-console': process.env.NODE_ENV === 'production' ? 2 : 0,
     'no-debugger': process.env.NODE_ENV === 'production' ? 2 : 0
   }

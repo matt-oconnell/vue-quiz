@@ -6,8 +6,8 @@
       </a>
     </div>
     <h1>{{$store.state.questionI}}</h1>
-    <button @click="lastQuestion">Last Question</button>
-    <button @click="nextQuestion">Next Question</button>
+    <button @click="gotoQuestion(--$store.state.questionI)">Last Question</button>
+    <button @click="gotoQuestion(++$store.state.questionI)">Next Question</button>
   </div>
 </template>
 
@@ -21,9 +21,7 @@ export default {
     }
   },
   methods: mapActions([
-    'gotoQuestion',
-    'nextQuestion',
-    'lastQuestion',
+    'gotoQuestion'
   ]),
 };
 </script>

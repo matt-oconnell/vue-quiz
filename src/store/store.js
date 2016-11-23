@@ -1,13 +1,16 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
+import VueResource from 'vue-resource';
 import questions from '../data/questions';
 
 Vue.use(Vuex);
+Vue.use(VueResource);
 
 const state = {
   questions,
   questionI: 0,
   question: {},
+  questionText: '',
   answerStatus: '',
   status: {
     answered: 0,
@@ -16,23 +19,10 @@ const state = {
 };
 
 const mutations = {
-  NEXT_QUESTION(state) {
-    if (state.questionI < questions.length - 1) {
-      state.questionI++;
-    }
-  },
-  LAST_QUESTION(state) {
-    if (state.questionI > 0) {
-      state.questionI--;
-    }
-  },
-  GOTO_QUESTION(state, i) {
-    if (state.questions[i]) {
-      state.questionI = i;
-    }
-  },
-  UPDATE_QUESTION(state) {
-    state.question = state.questions[state.questionI];
+  UPDATE_QUESTION(state, { markdown, i }) {
+    state.questionText = markdown;
+    state.questionI = i;
+    state.question = state.questions[i];
     state.answerStatus = '';
   },
   CORRECT_ANSWER(state) {
@@ -49,17 +39,17 @@ const mutations = {
 };
 
 const actions = {
-  nextQuestion: ({ commit }) => {
-    commit('NEXT_QUESTION');
-    commit('UPDATE_QUESTION');
-  },
-  lastQuestion: ({ commit }) => {
-    commit('LAST_QUESTION');
-    commit('UPDATE_QUESTION');
-  },
-  gotoQuestion: ({ commit }, i) => {
-    commit('GOTO_QUESTION', i);
-    commit('UPDATE_QUESTION');
+  gotoQuestion: ({ commit, state }, i) => {
+    let ret;
+    if (i < state.questions.length - 1 || i >= 0) {
+      ret = Vue.http.get(`/questions/${i}`).then(({ body }) => {
+        commit('UPDATE_QUESTION', {
+          markdown: body,
+          i
+        });
+      });
+    }
+    return ret;
   },
   submitAnswer: ({ commit, state }, i) => {
     if (state.question.answerIndex === i) {
