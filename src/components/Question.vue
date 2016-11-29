@@ -35,6 +35,12 @@ export default {
   },
   methods: mapActions([
     'submitAnswer',
-  ]),
+  ])
 };
 </script>
+
+<style media="screen">
+  code {
+    font-size: 12px;
+  }
+</style>

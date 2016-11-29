@@ -1,8 +1,14 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto+Mono');
+
 .hljs {
 	display: block;
 	overflow-x: auto;
 	padding: 0.5em;
 	background: #1d1f21;
+  font-family: 'Roboto Mono', Monaco, monospace;
+}
+.hljs code, .hljs span, .hljs pre {
+  font-family: 'Roboto Mono', Monaco, monospace;
 }
 .hljs::selection, .hljs span::selection {
 	background: #373b41
