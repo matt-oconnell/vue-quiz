@@ -4,6 +4,7 @@ import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-default/index.css';
 import QuizView from './views/QuizView';
 import HomeView from './views/HomeView';
+import StackView from './views/StackView';
 import store from './store/store';
 import App from './App';
 
@@ -16,6 +17,7 @@ const router = new VueRouter({
   routes: [
     { path: '/', component: HomeView },
     { path: '/quiz', component: QuizView },
+    { path: '/stack', component: StackView },
     { path: '*', redirect: '/' }
   ]
 });

@@ -7,6 +7,7 @@ Vue.use(Vuex);
 Vue.use(VueResource);
 
 const state = {
+  code: null,
   questions,
   questionI: 0,
   question: {},
@@ -37,6 +38,9 @@ const mutations = {
     state.answerStatus = 'incorrect';
     state.question.answered = true;
     state.status.answered++;
+  },
+  UPDATE_CODE(state, { code }) {
+    state.code = code;
   }
 };
 
@@ -54,6 +58,13 @@ const actions = {
         });
       });
     }
+  },
+  getCode: ({ commit }) => {
+    Vue.http.get('/test').then((code) => {
+      commit('UPDATE_CODE', {
+        code
+      });
+    });
   },
   submitAnswer: ({ commit, state }, i) => {
     if (state.question.answerIndex === i) {
