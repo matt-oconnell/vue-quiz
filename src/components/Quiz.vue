@@ -1,9 +1,7 @@
 <template>
   <div>
     <status></status>
-    <hr>
     <navigation></navigation>
-    <hr>
     <question></question>
   </div>
 </template>

@@ -1,10 +1,14 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
+import ElementUI from 'element-ui';
+import 'element-ui/lib/theme-default/index.css';
 import QuizView from './views/QuizView';
 import HomeView from './views/HomeView';
 import store from './store/store';
+import App from './App';
 
 Vue.use(VueRouter);
+Vue.use(ElementUI);
 
 const router = new VueRouter({
   mode: 'history',
@@ -16,16 +20,7 @@ const router = new VueRouter({
   ]
 });
 
-new Vue({
+new Vue(Vue.util.extend({
   store,
-  router,
-  template: `
-    <div id="app">
-      <ul>
-        <li><router-link to="/">Home</router-link></li>
-        <li><router-link to="/quiz">Quiz</router-link></li>
-      </ul>
-      <router-view class="view"></router-view>
-    </div>
-  `
-}).$mount('div');
+  router
+}, App)).$mount('div');

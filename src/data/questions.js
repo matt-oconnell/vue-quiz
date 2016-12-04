@@ -1,12 +1,18 @@
 export default [
   {
-    answers: [1, 2, 3, 4],
+    answers: ['POST', 'GET', 'PUT', 'DELETE'],
+    answerIndex: 2,
+    explanation: 'It ain\'t what it ain\'t',
+    answered: false
+  },
+  {
+    answers: ['multipart/form-data', 'x-www-form-urlencoded', 'text/plain', 'application/json'],
     answerIndex: 1,
     explanation: 'It ain\'t what it ain\'t',
     answered: false
   },
   {
-    answers: [2, 4, 6, 8],
+    answers: ['multipart/form-data', 'x-www-form-urlencoded', 'text/plain', 'application/json'],
     answerIndex: 1,
     explanation: 'It ain\'t what it ain\'t',
     answered: false

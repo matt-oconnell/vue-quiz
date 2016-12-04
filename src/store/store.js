@@ -40,16 +40,16 @@ const mutations = {
 
 const actions = {
   gotoQuestion: ({ commit, state }, i) => {
-    let ret;
-    if (i < state.questions.length - 1 || i >= 0) {
-      ret = Vue.http.get(`/questions/${i}`).then(({ body }) => {
+    if (i < state.questions.length && i >= 0) {
+      Vue.http
+      .get(`/questions/${i}`)
+      .then(({ body }) => {
         commit('UPDATE_QUESTION', {
           markdown: body,
           i
         });
       });
     }
-    return ret;
   },
   submitAnswer: ({ commit, state }, i) => {
     if (state.question.answerIndex === i) {
@@ -62,12 +62,12 @@ const actions = {
 
 const getters = {
   answered: state => `${state.status.answered} / ${state.questions.length}`,
+  percentageAnswered: state => Math.round(state.status.answered / state.questions.length * 100),
   percentageCorrect: (state) => {
     const correct = state.status.correctAnswers;
     const answered = state.status.answered;
     const fraction = correct / answered || 0;
-    const percentage = Math.round(fraction * 100);
-    return `${percentage}%`;
+    return Math.round(fraction * 100);
   }
 };
 

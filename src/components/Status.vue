@@ -1,8 +1,7 @@
 <template>
-  <div class="status">
-    <p>Questions Answered: {{answered}}</p>
-    <p>Percentage Correct: {{percentageCorrect}}</p>
-  </div>
+  <el-row class="status" :span="24">
+    <el-progress :percentage="percentageAnswered"></el-progress>
+  </el-row>
 </template>
 
 <script>
@@ -12,6 +11,16 @@ export default {
   computed: mapGetters([
     'answered',
     'percentageCorrect',
-  ]),
+    'percentageAnswered',
+  ])
 };
 </script>
+
+<style lang="css">
+
+.el-progress-bar {
+  margin-right: -50px;
+  padding-right: 50px
+}
+
+</style>
