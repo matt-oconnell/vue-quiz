@@ -8,6 +8,7 @@ Vue.use(VueResource);
 
 const state = {
   code: null,
+  codeI: 0,
   questions,
   questionI: 0,
   question: {},
@@ -21,6 +22,9 @@ const state = {
 };
 
 const mutations = {
+  UPDATE_CODE_I(state, { i }) {
+    state.codeI = i;
+  },
   UPDATE_QUESTION(state, { questionMd, explanationMd, i }) {
     state.questionText = questionMd;
     state.explanationText = explanationMd;
@@ -60,16 +64,20 @@ const actions = {
     }
   },
   getCode: ({ commit }) => {
-    Vue.http.get('/test').then((code) => {
+    Vue.http.get('/test').then((res) => {
       commit('UPDATE_CODE', {
-        code
+        code: JSON.parse(res.body)
       });
     });
+  },
+  updateCodeI: ({ commit }, i) => {
+    if (state.code && i < state.code.trace.length && i >= 0) {
+      commit('UPDATE_CODE_I', { i });
+    }
   },
   submitAnswer: ({ commit, state }, i) => {
     if (state.question.answerIndex === i) {
       commit('CORRECT_ANSWER');
-    } else {
       commit('INCORRECT_ANSWER');
     }
   }

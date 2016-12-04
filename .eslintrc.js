@@ -32,6 +32,7 @@ module.exports = {
     'arrow-body-style': 0,
     'no-extraneous-dependencies': 0,
     'no-mixed-operators': 0,
+    'no-confusing-arrow': 0,
     'no-console': process.env.NODE_ENV === 'production' ? 2 : 0,
     'no-debugger': process.env.NODE_ENV === 'production' ? 2 : 0
   }

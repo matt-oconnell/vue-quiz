@@ -51,6 +51,6 @@ export default {
     text-align: center;
   }
   .katex {
-    font-size: 14px;
+    font-size: 12px;
   }
 </style>
