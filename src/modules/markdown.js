@@ -1,4 +1,5 @@
 import Markdown from 'markdown-it';
+import MarkdownMath from 'markdown-it-katex';
 import hljs from 'highlight.js';
 import '../../static/codestyle.css';
 
@@ -14,4 +15,4 @@ export default new Markdown(({
     }
     return ''; // use external default escaping
   }
-}));
+})).use(MarkdownMath);

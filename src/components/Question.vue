@@ -50,4 +50,7 @@ export default {
   h1 {
     text-align: center;
   }
+  .katex {
+    font-size: 14px;
+  }
 </style>
