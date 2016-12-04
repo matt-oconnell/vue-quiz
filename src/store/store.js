@@ -11,6 +11,7 @@ const state = {
   questionI: 0,
   question: {},
   questionText: '',
+  explanationText: '',
   answerStatus: '',
   status: {
     answered: 0,
@@ -19,8 +20,9 @@ const state = {
 };
 
 const mutations = {
-  UPDATE_QUESTION(state, { markdown, i }) {
-    state.questionText = markdown;
+  UPDATE_QUESTION(state, { questionMd, explanationMd, i }) {
+    state.questionText = questionMd;
+    state.explanationText = explanationMd;
     state.questionI = i;
     state.question = state.questions[i];
     state.answerStatus = '';
@@ -41,11 +43,13 @@ const mutations = {
 const actions = {
   gotoQuestion: ({ commit, state }, i) => {
     if (i < state.questions.length && i >= 0) {
-      Vue.http
-      .get(`/questions/${i}`)
-      .then(({ body }) => {
+      const questionP = Vue.http.get(`/questions/${i}`);
+      const explanationP = Vue.http.get(`/explanations/${i}`);
+      Promise.all([questionP, explanationP])
+      .then(([questionMd, explanationMd]) => {
         commit('UPDATE_QUESTION', {
-          markdown: body,
+          questionMd: questionMd.body,
+          explanationMd: explanationMd.body,
           i
         });
       });

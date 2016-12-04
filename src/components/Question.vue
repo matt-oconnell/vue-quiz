@@ -5,9 +5,7 @@
     <el-button v-for="(answer, i) in answers" :plain="answered && selectedAnswer === i" :disabled="answered" @click="submit(i)">
       {{answer}}
     </el-button>
-    <p v-if="answered">
-      {{explanation}}
-    </p>
+    <div v-if="answered" v-html="explanation"></div>
     <p><strong v-if="answerStatus === 'correct'">Correct!</strong></p>
     <p><strong v-if="answerStatus === 'incorrect'">Wrong!</strong></p>
   </div>
@@ -29,9 +27,11 @@ export default {
       answers: s => s.question.answers,
       answered: s => s.question.answered,
       answerStatus: s => s.answerStatus,
-      explanation: s => s.question.explanation,
       question: (s) => {
         return markdown.render(s.questionText) || '';
+      },
+      explanation: (s) => {
+        return markdown.render(s.explanationText) || '';
       }
     })
   },
