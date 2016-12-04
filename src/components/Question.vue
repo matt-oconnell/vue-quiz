@@ -1,8 +1,7 @@
 <template>
   <div>
-    <h1>Question!</h1>
     <div v-html="question"></div>
-    <el-button v-for="(answer, i) in answers" :plain="answered && selectedAnswer === i" :disabled="answered" @click="submit(i)">
+    <el-button v-for="(answer, i) in answers" :plain="!!answered && selectedAnswer !== i" :disabled="answered" @click="submit(i)">
       {{answer}}
     </el-button>
     <div v-if="answered" v-html="explanation"></div>
