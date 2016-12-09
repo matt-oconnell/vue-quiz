@@ -1,20 +1,42 @@
 export default [
   {
-    answers: ['POST', 'GET', 'PUT', 'DELETE'],
+    answers: [
+      '[2, 1, 1]',
+      '[2, undefined, 1]',
+      '[2, 1, 2]',
+      '[2, undefined, 2]'
+    ],
+    answerIndex: 0,
+    answered: false
+  },
+  {
+    answers: [
+      '["inner", "outer"]',
+      '["outer", "outer"]',
+      '[undefined, undefined]',
+      'Error'
+    ],
+    answerIndex: 1,
+    answered: false
+  },
+  {
+    answers: [
+      'undefined',
+      '1',
+      '{ x: 1 }',
+      'Error'
+    ],
     answerIndex: 2,
-    explanation: 'It ain\'t what it ain\'t',
     answered: false
   },
   {
-    answers: ['multipart/form-data', 'x-www-form-urlencoded', 'text/plain', 'application/json'],
+    answers: [
+      'function',
+      'object',
+      'undefined',
+      Error
+    ],
     answerIndex: 1,
-    explanation: 'It ain\'t what it ain\'t',
-    answered: false
-  },
-  {
-    answers: ['multipart/form-data', 'x-www-form-urlencoded', 'text/plain', 'application/json'],
-    answerIndex: 1,
-    explanation: 'It ain\'t what it ain\'t',
     answered: false
   }
 ];

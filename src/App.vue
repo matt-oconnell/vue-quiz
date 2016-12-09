@@ -33,7 +33,7 @@ body {
 
 #app {
   font-family: 'Roboto Mono';
-  max-width: 1200px;
+  max-width: 860px;
   margin: 0 auto;
 }
 .el-row {

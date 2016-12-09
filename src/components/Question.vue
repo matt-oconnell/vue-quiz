@@ -43,7 +43,16 @@ export default {
 };
 </script>
 
-<style media="screen">
+<style>
+  @import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro');
+
+  p {
+    font-family: 'Source Sans Pro';
+    font-size: 13px;
+  }
+  pre {
+    border-radius: 4px;
+  }
   code {
     font-size: 12px;
   }
