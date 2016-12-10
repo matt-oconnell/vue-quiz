@@ -1,6 +1,12 @@
 <template>
   <div>
-    <div v-html="func"></div>
+    <pre class="hljs">
+      <code>
+        <div v-for="(line, i) in func" v-bind:class="{ active: currentStep[0].line == i + 1 }" class="line">
+          <span class="line-number">{{i + 1}}</span><span v-html="line"></span>
+        </div>
+      </code>
+    </pre>
     <div class="buttons">
       <el-button @click="lastStep()">LAST</el-button>
       <el-button @click="nextStep()">NEXT</el-button>
@@ -67,7 +73,8 @@ export default {
         const funcStr = s.code.code;
         const funcTmpl = `\`\`\`js
 ${funcStr}`;
-        return markdown.render(funcTmpl);
+        // fix this mess
+        return markdown.render(funcTmpl).split('<code>')[1].split('</code>')[0].split('\n');
       }
       return '';
     }
@@ -76,6 +83,23 @@ ${funcStr}`;
 </script>
 
 <style media="screen">
+  code {
+    white-space: pre-line;
+  }
+  .line {
+    line-height: .8;
+    padding: 2px 0;
+    width: 100%;
+  }
+  .line.active {
+    border: 1px solid white;
+  }
+  .line-number {
+    display: inline-block;
+    width: 20px;
+    white-space: normal;
+    margin-right: 20px;
+  }
   .buttons {
     margin-top: 25px;
     text-align: center;
