@@ -2,11 +2,23 @@
   <div>
     <pre class="hljs">
       <code>
-        <div v-for="(line, i) in func" v-bind:class="{ active: currentStep[0].line == i + 1 }" class="line">
+        <div v-for="(line, i) in func" v-bind:class="{ active: currentStep[0].line == i + 1, last: currentStep[0].lastLine == i + 1 }" class="line">
           <span class="line-number">{{i + 1}}</span><span v-html="line"></span>
         </div>
       </code>
     </pre>
+    <el-row>
+      <el-col :span="8">
+        <el-table :data="stdout">
+          <el-table-column prop="stdout" label="stdout"></el-table-column>
+        </el-table>
+      </el-col>
+      <el-col :span="8">
+        <el-table :data="globals">
+          <el-table-column prop="global" label="Ordered Globals"></el-table-column>
+        </el-table>
+      </el-col>
+    </el-row>
     <div class="buttons">
       <el-button @click="lastStep()">LAST</el-button>
       <el-button @click="nextStep()">NEXT</el-button>
@@ -43,13 +55,31 @@ export default {
     }
   },
   computed: mapState({
+    stdout: (s) => {
+      if (s.code && s.code.trace[s.codeI]) {
+        const stdoutArr = s.code.trace[s.codeI].stdout.split('\n');
+        return stdoutArr.map(stdout => ({ stdout })).filter(el => el.stdout);
+      }
+      return [{}];
+    },
+    globals: (s) => {
+      if (s.code && s.code.trace[s.codeI]) {
+        const currentGlobals = s.code.trace[s.codeI].ordered_globals.map((global) => {
+          return { global };
+        });
+        return currentGlobals;
+      }
+      return [{}];
+    },
     currentStep: (s) => {
       if (s.code && s.code.trace[s.codeI]) {
         const cur = s.code.trace[s.codeI];
+        const last = s.code.trace[s.codeI - 1];
         return [{
           i: s.codeI,
           event: cur.event,
           line: cur.line,
+          lastLine: last.line || -1,
           stdout: cur.stdout
         }];
       }
@@ -93,6 +123,9 @@ ${funcStr}`;
   }
   .line.active {
     border: 1px solid white;
+  }
+  .line.last {
+    border: 1px solid green;
   }
   .line-number {
     display: inline-block;

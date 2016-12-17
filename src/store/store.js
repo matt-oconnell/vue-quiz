@@ -68,6 +68,7 @@ const actions = {
       commit('UPDATE_CODE', {
         code: JSON.parse(res.body)
       });
+      commit('UPDATE_CODE_I', { i: 1 });
     });
   },
   updateCodeI: ({ commit }, i) => {
@@ -78,6 +79,7 @@ const actions = {
   submitAnswer: ({ commit, state }, i) => {
     if (state.question.answerIndex === i) {
       commit('CORRECT_ANSWER');
+    } else {
       commit('INCORRECT_ANSWER');
     }
   }
