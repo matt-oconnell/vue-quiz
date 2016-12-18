@@ -16,6 +16,11 @@
         </pre>
       </el-col>
       <el-col :span="12">
+        <h4>Current Step</h4>
+        <el-table :data="currentStep">
+          <el-table-column prop="event" label="Event"></el-table-column>
+          <el-table-column prop="line" label="Line"></el-table-column>
+        </el-table>
         <el-row :gutter="20">
           <el-col :span="12">
             <h4>Globals</h4>
@@ -31,19 +36,23 @@
             </el-table>
           </el-col>
         </el-row>
-        <h4>Current Step</h4>
-        <el-table :data="currentStep">
-          <el-table-column prop="i" label="I"></el-table-column>
-          <el-table-column prop="event" label="Event"></el-table-column>
-          <el-table-column prop="line" label="Line"></el-table-column>
-        </el-table>
-        <h4>Current Stack</h4>
-        <el-table :data="currentStack">
+        <h4>Frames</h4>
+        <el-table :data="currentStack" :row-class-name="isNewestFrame">
           <el-table-column prop="function" label="Function"></el-table-column>
           <el-table-column prop="frame" label="Frame"></el-table-column>
           <el-table-column prop="localVals" label="Local Values" inline-template>
             <div>
-              <div v-for="local in row.localVals">{{local.variable}}: {{local.val}}</div>
+              <div v-for="local in row.localVals">
+                <span v-if="local.variable === '__return__'">
+                  <i class="el-icon-d-arrow-right"></i> return:
+                </span>
+                <span v-if="local.variable !== '__return__'">
+                  {{local.variable}}:
+                </span>
+                <span :class="local.val === 'undefined' ? 'grey' : ''">
+                  {{local.val}}
+                </span>
+              </div>
             </div>
           </el-table-column>
         </el-table>
@@ -64,6 +73,16 @@ export default {
     return {
       codeI: this.$store.state.codeI
     };
+  },
+  methods: {
+    isNewestFrame(_, index) {
+      if (this.currentTrace) {
+        if (index + 1 === this.currentTrace.stack_to_render.length) {
+          return 'new-row';
+        }
+      }
+      return '';
+    }
   },
   watch: {
     codeI(i) {
@@ -99,7 +118,6 @@ export default {
       if (!this.currentTrace) return [{}];
       const last = s.code.trace[s.codeI - 1];
       return [{
-        i: s.codeI,
         event: this.currentTrace.event,
         line: this.currentTrace.line,
         lastLine: last ? last.line : -1
@@ -136,6 +154,9 @@ ${funcStr}`;
 </script>
 
 <style media="screen">
+  .grey {
+    color: grey;
+  }
   code, pre {
     display: block;
     margin: 0;
@@ -173,5 +194,9 @@ ${funcStr}`;
   .buttons {
     margin-top: 25px;
     text-align: center;
+  }
+  /* eleme.io customizations */
+  .el-table tr.new-row {
+    background-color: #EFF2F7;
   }
 </style>
