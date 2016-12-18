@@ -7,6 +7,7 @@
         </div>
       </code>
     </pre>
+    <el-slider v-model="codeI" :max="parseInt(trace.length)" show-stops show-input></el-slider>
     <el-row>
       <el-col :span="8">
         <el-table :data="stdout">
@@ -19,10 +20,6 @@
         </el-table>
       </el-col>
     </el-row>
-    <div class="buttons">
-      <el-button @click="lastStep()">LAST</el-button>
-      <el-button @click="nextStep()">NEXT</el-button>
-    </div>
     <h4>Current Step</h4>
     <el-table :data="currentStep" style="width: 100%">
       <el-table-column prop="i" label="I"></el-table-column>
@@ -46,48 +43,47 @@ export default {
   created: function created() {
     this.$store.dispatch('getCode');
   },
-  methods: {
-    nextStep() {
-      this.$store.dispatch('updateCodeI', this.$store.state.codeI + 1);
-    },
-    lastStep() {
-      this.$store.dispatch('updateCodeI', this.$store.state.codeI - 1);
+  data() {
+    return {
+      codeI: this.$store.state.codeI
+    };
+  },
+  watch: {
+    codeI(i) {
+      this.$store.dispatch('updateCodeI', i);
     }
   },
   computed: mapState({
-    stdout: (s) => {
-      if (s.code && s.code.trace[s.codeI]) {
-        const stdoutArr = s.code.trace[s.codeI].stdout.split('\n');
-        return stdoutArr.map(stdout => ({ stdout })).filter(el => el.stdout);
-      }
-      return [{}];
+    trace: s => s.code ? s.code.trace : [],
+    currentTrace(s) {
+      return this.trace ? this.trace[s.codeI] : null;
     },
-    globals: (s) => {
-      if (s.code && s.code.trace[s.codeI]) {
-        const currentGlobals = s.code.trace[s.codeI].ordered_globals.map((global) => {
-          return { global };
-        });
-        return currentGlobals;
-      }
-      return [{}];
+    stdout() {
+      if (!this.currentTrace) return [{}];
+      return this.currentTrace.stdout
+        .split('\n')
+        .map(stdout => ({ stdout }))
+        .filter(el => el.stdout);
     },
-    currentStep: (s) => {
-      if (s.code && s.code.trace[s.codeI]) {
-        const cur = s.code.trace[s.codeI];
-        const last = s.code.trace[s.codeI - 1];
-        return [{
-          i: s.codeI,
-          event: cur.event,
-          line: cur.line,
-          lastLine: last.line || -1,
-          stdout: cur.stdout
-        }];
-      }
-      return [{}];
+    globals() {
+      if (!this.currentTrace) return [{}];
+      return this.currentTrace.ordered_globals
+        .map(global => ({ global }));
     },
-    currentStack: (s) => {
-      if (s.code && s.code.trace[s.codeI]) {
-        const current = s.code.trace[s.codeI].stack_to_render.map((el) => {
+    currentStep(s) {
+      if (!this.currentTrace) return [{}];
+      const last = s.code.trace[s.codeI - 1];
+      return [{
+        i: s.codeI,
+        event: this.currentTrace.event,
+        line: this.currentTrace.line,
+        lastLine: last ? last.line : -1,
+        stdout: this.currentTrace.stdout
+      }];
+    },
+    currentStack() {
+      if (this.currentTrace) {
+        const current = this.currentTrace.stack_to_render.map((el) => {
           return {
             frame: el.frame_id,
             function: el.func_name
@@ -97,7 +93,6 @@ export default {
       }
       return [{}];
     },
-    trace: s => s.code ? s.code.trace : [],
     func: (s) => {
       if (s.code) {
         const funcStr = s.code.code;

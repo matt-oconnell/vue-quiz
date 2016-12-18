@@ -34,6 +34,8 @@ module.exports = {
     'no-mixed-operators': 0,
     'no-confusing-arrow': 0,
     'strings-must-use-single-quote': 0,
+    'one-var': 0,
+    'one-var-declaration-per-line': 0,
     'no-console': process.env.NODE_ENV === 'production' ? 2 : 0,
     'no-debugger': process.env.NODE_ENV === 'production' ? 2 : 0
   }
