@@ -1,37 +1,54 @@
 <template>
   <div>
-    <pre class="hljs">
-      <code>
-        <div v-for="(line, i) in func" v-bind:class="{ active: currentStep[0].line == i + 1, last: currentStep[0].lastLine == i + 1 }" class="line">
-          <span class="line-number">{{i + 1}}</span><span v-html="line"></span>
-        </div>
-      </code>
-    </pre>
-    <el-slider v-model="codeI" :max="parseInt(trace.length)" show-stops show-input></el-slider>
-    <el-row>
-      <el-col :span="8">
-        <el-table :data="stdout">
-          <el-table-column prop="stdout" label="stdout"></el-table-column>
-        </el-table>
+    <el-row :gutter="20">
+      <el-col :span="24">
+        <el-slider v-model="codeI" :max="parseInt(trace.length)" show-stops show-input></el-slider>
       </el-col>
-      <el-col :span="8">
-        <el-table :data="globals">
-          <el-table-column prop="global" label="Ordered Globals"></el-table-column>
+    </el-row>
+    <el-row :gutter="20">
+      <el-col :span="12">
+        <pre class="hljs">
+          <code>
+            <div v-for="(line, i) in func" v-bind:class="{ active: currentStep[0].line == i + 1, last: currentStep[0].lastLine == i + 1 }" class="line">
+              <span class="line-number">{{i + 1}}</span><div class="code-line" v-html="line"></div>
+            </div>
+          </code>
+        </pre>
+      </el-col>
+      <el-col :span="12">
+        <el-row :gutter="20">
+          <el-col :span="12">
+            <h4>Globals</h4>
+            <el-table :data="globals">
+              <el-table-column prop="varName" label="Name"></el-table-column>
+              <el-table-column prop="value" label="Value"></el-table-column>
+            </el-table>
+          </el-col>
+          <el-col :span="12">
+            <h4>Output</h4>
+            <el-table :data="stdout">
+              <el-table-column prop="stdout" label="stdout" span></el-table-column>
+            </el-table>
+          </el-col>
+        </el-row>
+        <h4>Current Step</h4>
+        <el-table :data="currentStep">
+          <el-table-column prop="i" label="I"></el-table-column>
+          <el-table-column prop="event" label="Event"></el-table-column>
+          <el-table-column prop="line" label="Line"></el-table-column>
+        </el-table>
+        <h4>Current Stack</h4>
+        <el-table :data="currentStack">
+          <el-table-column prop="function" label="Function"></el-table-column>
+          <el-table-column prop="frame" label="Frame"></el-table-column>
+          <el-table-column prop="localVals" label="Local Values" inline-template>
+            <div>
+              <div v-for="local in row.localVals">{{local.variable}}: {{local.val}}</div>
+            </div>
+          </el-table-column>
         </el-table>
       </el-col>
     </el-row>
-    <h4>Current Step</h4>
-    <el-table :data="currentStep" style="width: 100%">
-      <el-table-column prop="i" label="I"></el-table-column>
-      <el-table-column prop="event" label="Event"></el-table-column>
-      <el-table-column prop="line" label="Line"></el-table-column>
-      <el-table-column prop="stdout" label="stdout"></el-table-column>
-    </el-table>
-    <h4>Current Stack</h4>
-    <el-table :data="currentStack" style="width: 100%">
-      <el-table-column prop="function" label="Function"></el-table-column>
-      <el-table-column prop="frame" label="Frame"></el-table-column>
-    </el-table>
   </div>
 </template>
 
@@ -67,8 +84,16 @@ export default {
     },
     globals() {
       if (!this.currentTrace) return [{}];
-      return this.currentTrace.ordered_globals
-        .map(global => ({ global }));
+      const globals = [];
+      this.currentTrace.ordered_globals.forEach((varName) => {
+        const rawVal = this.currentTrace.globals[varName];
+        let value = rawVal;
+        if (Array.isArray(rawVal) && rawVal[0] === 'REF') {
+          value = this.currentTrace.heap[rawVal[1]][0];
+        }
+        globals.push({ varName, value });
+      });
+      return globals;
     },
     currentStep(s) {
       if (!this.currentTrace) return [{}];
@@ -77,21 +102,24 @@ export default {
         i: s.codeI,
         event: this.currentTrace.event,
         line: this.currentTrace.line,
-        lastLine: last ? last.line : -1,
-        stdout: this.currentTrace.stdout
+        lastLine: last ? last.line : -1
       }];
     },
     currentStack() {
-      if (this.currentTrace) {
-        const current = this.currentTrace.stack_to_render.map((el) => {
-          return {
-            frame: el.frame_id,
-            function: el.func_name
-          };
+      if (!this.currentTrace) return [{}];
+      return this.currentTrace.stack_to_render.map((el) => {
+        const locals = [];
+        Object.keys(el.encoded_locals).forEach((key) => {
+          const rawVal = el.encoded_locals[key];
+          const val = Array.isArray(rawVal) ? rawVal[1] : rawVal;
+          locals.push({ variable: key, val });
         });
-        return current;
-      }
-      return [{}];
+        return {
+          frame: el.frame_id,
+          function: el.func_name,
+          localVals: locals
+        };
+      });
     },
     func: (s) => {
       if (s.code) {
@@ -108,25 +136,39 @@ ${funcStr}`;
 </script>
 
 <style media="screen">
+  code, pre {
+    display: block;
+    margin: 0;
+  }
+  pre {
+    white-space: normal;
+  }
   code {
-    white-space: pre-line;
+    white-space: pre;
+  }
+  .code-line {
+    display: inline-block;
   }
   .line {
     line-height: .8;
-    padding: 2px 0;
     width: 100%;
+    display: flex;
+    align-items: center;
+    padding: 5px 10px;
+    transition: background-color .5s
   }
   .line.active {
-    border: 1px solid white;
+    background-color: rgba(0, 128, 0, 0.40);
   }
   .line.last {
-    border: 1px solid green;
+    background-color: rgba(0, 128, 0, 0.10);
   }
   .line-number {
     display: inline-block;
     width: 20px;
     white-space: normal;
     margin-right: 20px;
+    margin-left: 3px;
   }
   .buttons {
     margin-top: 25px;

@@ -26,6 +26,10 @@ export default {
 <style lang="css">
 @import url('https://fonts.googleapis.com/css?family=Roboto+Mono');
 
+* {
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
   padding: 0 20px;
@@ -33,11 +37,11 @@ body {
 
 #app {
   font-family: 'Roboto Mono';
-  max-width: 860px;
+  max-width: 100%;
   margin: 0 auto;
 }
 .el-row {
-  margin-bottom: 20px;
+  /*margin-bottom: 20px;*/
   &:last-child {
     margin-bottom: 0;
   }
